@@ -1,0 +1,37 @@
+name: make-nkf
+
+on: 
+  push
+    
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: printenv
+        run: |
+            Get-ChildItem Env:
+
+      - name: setup
+        run: |
+            choco install -y mingw make strawberryperl
+            $Env:Path += ";c:\Strawberry\perl\bin"
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: make
+        run: |
+            make test > test.log
+            cat test.log
+            $result = Select-String -path test.log -pattern "Fail$"
+            if ($result) {
+              exit 1
+            }
+            
+      - name: archive
+        uses: actions/upload-artifact@v2
+        with:
+            name: result
+            path: |
+              nkf.exe
+              test.log
