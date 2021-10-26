@@ -1,4 +1,4 @@
-CC = cc
+CC = gcc
 CFLAGS = -g -O2 -Wall -pedantic
 # CFLAGS = -O3
 SHAR = shar 
